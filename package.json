@@ -1,0 +1,11 @@
+{
+  "name": "shorlservice",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "latest",
+    "mongoose": "latest",
+    "joi": "latest",
+    "express-validation": "latest"
+  }
+}

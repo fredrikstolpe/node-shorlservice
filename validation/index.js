@@ -1,0 +1,1 @@
+exports.shorl = require('./shorl');
