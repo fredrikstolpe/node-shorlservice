@@ -6,6 +6,11 @@
     "express": "latest",
     "mongoose": "latest",
     "joi": "latest",
-    "express-validation": "latest"
+    "express-validation": "latest",
+    "body-parser": "latest",
+    "jsonfile": "latest",
+    "q": "latest",
+    "multer": "latest",
+    "mime": "latest"
   }
 }

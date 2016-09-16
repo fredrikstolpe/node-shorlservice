@@ -3,36 +3,67 @@ var express = require('express'),
   validate = require('express-validation'),
   validation = require('../../validation/'),
   Shorl = require('../../models/Shorl'),
-  GenericResponse = require('../../models/GenericResponse');
+  GenericResponse = require('../../models/GenericResponse'),
+  jsonfile = require('jsonfile'),
+  config = require('../../config');
 
 module.exports = function() {
-
+    
   /**
    * Get url from shorl
    */
   router.get('/:shorl', function(req, res, next) {
-
-    /*
-    var shorl = new Shorl({
-      shorl: 'gurka'
-    });
-    shorl.save(function(err, shorl) {
-      if (err) next(err);
+    // Shorl.find().count(function (err, count) {
+    //   console.log(count);
+    // });
+    jsonfile.readFile(config.shorlJsonFilePath,function(err, obj) {
+      if (err) next(err)
       else{
-        console.log(shorl);
+        shorl = obj[req.params.shorl];
+        res.send(new GenericResponse(true, null, shorl));
       }
-    });*/
-
-
-    Shorl.find().count(function (err, count) {
-      console.log(count);
     });
-    Shorl.findOne({ 'shorl': req.query.shorl }, function (err, shorl) {
+    /*console.log(req.param);
+    Shorl.findOne({ 'shorl': req.params.shorl }, function (err, shorl) {
       if (err) next(err);
       else{
         res.send(new GenericResponse(true, null, shorl));
       }
+    });*/
+  });
+
+  /**
+   * Create a shorl without redirect url for later use
+   */
+  router.post('/', validate(validation.shorl.post), function(req, res, next) {
+    var shorl = new Shorl({
+      shorl: req.body.shorl
     });
+    shorl.save(function(err, entry) {
+      if (err) next(err);
+      else{
+        res.send(new GenericResponse(true, null, entry));
+      }
+    });
+  });
+
+  /**
+   * Save url to shorl
+   */
+  router.put('/:shorl', validate(validation.shorl.put), function(req, res, next) {
+      Shorl.findOne({ 'shorl': req.params.shorl }, function (err, shorl) {
+        //Check if not url set
+        if (err) next(err);
+        else{
+          shorl.url = req.body.url;
+          shorl.save(function(err, entry) {
+            if (err) next(err);
+            else{
+              res.send(new GenericResponse(true, null, entry));
+            }
+          });
+        }
+      });
   });
 
   /**

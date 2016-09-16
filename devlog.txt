@@ -1,0 +1,14 @@
+https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
+
+"C:\Program Files\MongoDB\Server\3.2\bin\mongod.exe" --dbpath C:\Dev\MongoDB
+
+Content-Type application/json
+
+<html>
+<body>
+<form action="http://modermodem.baz20.se:3000/api/upload" method="post" enctype="multipart/form-data">
+  <p><input type="file" name="image">
+  <p><button type="submit">Submit</button>
+</form>
+</body>
+</html>
