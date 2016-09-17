@@ -1,1 +1,1 @@
-exports.shorl = require('./shorl');
+//exports.shorl = require('./shorl');

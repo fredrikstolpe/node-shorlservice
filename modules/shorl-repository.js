@@ -8,49 +8,37 @@ function assertJson(){
   var deferred = Q.defer();
   if (shorls == null){
     jsonfile.readFile(config.shorlJsonFilePath,function(err, obj) {
-      console.log("Reading file");
-      shorls = obj;
-      deferred.resolve();
+      if (err) deferred.reject(err);
+      else{
+        shorls = obj;
+        deferred.resolve();
+      }
     });
   }
   else{
-    console.log("Returning instantly");
-    deferred.resolve(resolve);
+    console.log("File already loaded");
+    deferred.resolve();
   }
   return deferred.promise;
 }
 
 module.exports = {
-  
-  getUrlForShorl: function(shorl){
+  getShorl: function(){
     var deferred = Q.defer();
     assertJson().then(function(){
-      deferred.resolve(shorls[shorl]);
-    });
-    return deferred.promise;
-  },
-
-  createShorlForUrl: function(url){
-    var deferred = Q.defer();
-    assertJson().then(function(){
-      var found = false;
-      for (key in shorls){
-        if (shorls[key] == null){
-          found = true;
-          shorls[key] = url;
-          jsonfile.writeFile(config.shorlJsonFilePath, shorls, function (err) {
-            if (err) deferred.reject(err);
-            else{
-              deferred.resolve(key);
-            }
-          });
-        }
-      }
-      if (!found){
-        deferred.reject("No keys left");
-      }
+      console.log(shorls.length);
+      var rnd = Math.floor(Math.random()*shorls.length);
+      var shorl = shorls.splice(rnd,1);
+       jsonfile.writeFile(config.shorlJsonFilePath, shorls, function (err) {
+         if (err) deferred.reject(err);
+         else{
+           console.log("File saved");
+           deferred.resolve(shorl);
+         }
+       });
+    },function(err){
+      deferred.reject(err);
     });
     return deferred.promise;
   }
-
 };
